@@ -11,6 +11,65 @@ import MTBBarcodeScanner
 
 
 class AiBarcodeScannerView:NSObject,FlutterPlatformView{
+
+    enum BarcodeFormat {
+        typealias RawValue = Int
+        case unknown // = 0
+        case aztec // = 1
+        case code39 // = 2
+        case code93 // = 3
+        case ean8 // = 4
+        case ean13 // = 5
+        case code128 // = 6
+        case dataMatrix // = 7
+        case qr // = 8
+        case interleaved2Of5 // = 9
+        case upce // = 10
+        case pdf417 // = 11
+        case UNRECOGNIZED(Int)
+
+        init() {
+            self = .unknown
+        }
+
+        init?(rawValue: Int) {
+            switch rawValue {
+            case 0: self = .unknown
+            case 1: self = .aztec
+            case 2: self = .code39
+            case 3: self = .code93
+            case 4: self = .ean8
+            case 5: self = .ean13
+            case 6: self = .code128
+            case 7: self = .dataMatrix
+            case 8: self = .qr
+            case 9: self = .interleaved2Of5
+            case 10: self = .upce
+            case 11: self = .pdf417
+            default: self = .UNRECOGNIZED(rawValue)
+            }
+        }
+
+        var rawValue: Int {
+            switch self {
+            case .unknown: return 0
+            case .aztec: return 1
+            case .code39: return 2
+            case .code93: return 3
+            case .ean8: return 4
+            case .ean13: return 5
+            case .code128: return 6
+            case .dataMatrix: return 7
+            case .qr: return 8
+            case .interleaved2Of5: return 9
+            case .upce: return 10
+            case .pdf417: return 11
+            case .UNRECOGNIZED(let i): return i
+            }
+        }
+
+    }
+    
     private let formatMap = [
         BarcodeFormat.aztec : AVMetadataObject.ObjectType.aztec,
         BarcodeFormat.code39 : AVMetadataObject.ObjectType.code39,

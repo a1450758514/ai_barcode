@@ -41,7 +41,6 @@ class AiBarcodeScannerView:NSObject,FlutterPlatformView{
         BarcodeFormat.pdf417 : AVMetadataObject.ObjectType.pdf417,
         BarcodeFormat.qr : AVMetadataObject.ObjectType.qr,
         BarcodeFormat.upce : AVMetadataObject.ObjectType.upce,
-        BarcodeFormat.upca : AVMetadataObject.ObjectType.upca,
     ]
 
     var scannerView: UIView!

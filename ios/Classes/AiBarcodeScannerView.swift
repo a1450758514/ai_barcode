@@ -11,7 +11,20 @@ import MTBBarcodeScanner
 
 
 class AiBarcodeScannerView:NSObject,FlutterPlatformView{
-    
+    private let formatMap = [
+        BarcodeFormat.aztec : AVMetadataObject.ObjectType.aztec,
+        BarcodeFormat.code39 : AVMetadataObject.ObjectType.code39,
+        BarcodeFormat.code93 : AVMetadataObject.ObjectType.code93,
+        BarcodeFormat.code128 : AVMetadataObject.ObjectType.code128,
+        BarcodeFormat.dataMatrix : AVMetadataObject.ObjectType.dataMatrix,
+        BarcodeFormat.ean8 : AVMetadataObject.ObjectType.ean8,
+        BarcodeFormat.ean13 : AVMetadataObject.ObjectType.ean13,
+        BarcodeFormat.interleaved2Of5 : AVMetadataObject.ObjectType.interleaved2of5,
+        BarcodeFormat.pdf417 : AVMetadataObject.ObjectType.pdf417,
+        BarcodeFormat.qr : AVMetadataObject.ObjectType.qr,
+        BarcodeFormat.upce : AVMetadataObject.ObjectType.upce,
+    ]
+
     var scannerView: UIView!
     var scanner:MTBBarcodeScanner!
     var methodChannel:FlutterMethodChannel?;
@@ -122,7 +135,8 @@ class AiBarcodeScannerView:NSObject,FlutterPlatformView{
                         if let codes = codes {
                             for code in codes {
                                 let stringValue = code.stringValue!
-                                let format = code.type
+                                let codeType = self.formatMap.first(where: { $0.value == code.type });
+                                let format = codeType?.key ?? .unknown
                                 let str = "{\"rawContent\":\(stringValue),\"format\":\(format)}";
                                 if(self.flutterResult != nil){
                                     self.flutterResult?("\(str)");

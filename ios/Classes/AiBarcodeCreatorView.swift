@@ -10,7 +10,7 @@ import Flutter
 
 
 class AiBarcodeCreatorView:NSObject,FlutterPlatformView{
-    
+
     var scannerView: UIView!
     
     var methodChannel:FlutterMethodChannel?;

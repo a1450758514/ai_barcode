@@ -100,7 +100,7 @@ class AndroidScannerView(
 
         let str = "{\"rawContent\":$stringValue,\"format\":$format}";
 
-        this.mEventChannelSink?.success(result.text.toString());
+        this.mEventChannelSink?.success(str.toString());
     }
 
     override fun possibleResultPoints(resultPoints: MutableList<ResultPoint>?) {

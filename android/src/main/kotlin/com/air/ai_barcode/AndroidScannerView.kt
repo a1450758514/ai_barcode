@@ -26,6 +26,50 @@ class AndroidScannerView(
 ) : PlatformView, MethodChannel.MethodCallHandler, EventChannel.StreamHandler, BarcodeCallback,
     DecoratedBarcodeView.TorchListener {
 
+    enum Protos_BarcodeFormat {
+        unknown = 0;
+        aztec = 1;
+        code39 = 2;
+        code93 = 3;
+        ean8 = 4;
+        ean13 = 5;
+        code128 = 6;
+        dataMatrix = 7;
+        qr = 8;
+        interleaved2of5 = 9;
+        upce = 10;
+        pdf417 = 11;
+        upca = 12;
+        codebar= 13;
+        rss_14= 14;
+    }
+
+    companion object {
+        const val TOGGLE_FLASH = 200
+        const val CANCEL = 300
+        const val EXTRA_CONFIG = "config"
+        const val EXTRA_RESULT = "scan_result"
+        const val EXTRA_ERROR_CODE = "error_code"
+
+        private val formatMap: Map<Protos_BarcodeFormat, BarcodeFormat> = mapOf(
+                Protos_BarcodeFormat.aztec to BarcodeFormat.AZTEC,
+                Protos_BarcodeFormat.code39 to BarcodeFormat.CODE_39,
+                Protos_BarcodeFormat.code93 to BarcodeFormat.CODE_93,
+                Protos_BarcodeFormat.code128 to BarcodeFormat.CODE_128,
+                Protos_BarcodeFormat.dataMatrix to BarcodeFormat.DATA_MATRIX,
+                Protos_BarcodeFormat.ean8 to BarcodeFormat.EAN_8,
+                Protos_BarcodeFormat.ean13 to BarcodeFormat.EAN_13,
+                Protos_BarcodeFormat.interleaved2of5 to BarcodeFormat.ITF,
+                Protos_BarcodeFormat.pdf417 to BarcodeFormat.PDF_417,
+                Protos_BarcodeFormat.qr to BarcodeFormat.QR_CODE,
+                Protos_BarcodeFormat.upce to BarcodeFormat.UPC_E,
+                Protos_BarcodeFormat.upca to BarcodeFormat.UPC_A
+                Protos_BarcodeFormat.codebar to BarcodeFormat.CODABAR
+                Protos_BarcodeFormat.rss_14 to BarcodeFormat.RSS_14
+        )
+
+    }
+
     /**
      * 用于向Flutter发送数据
      */
@@ -49,6 +93,12 @@ class AndroidScannerView(
         }
 
         mLastText = result.text
+
+        val stringValue = result.text.toString();
+        val format = (formatMap.filterValues { it == result.barcodeFormat }.keys.firstOrNull()
+                    ?: Protos_BarcodeFormat.unknown)
+
+        let str = "{\"rawContent\":$stringValue,\"format\":$format}";
 
         this.mEventChannelSink?.success(result.text.toString());
     }
@@ -111,6 +161,8 @@ class AndroidScannerView(
 
         val formats: Collection<BarcodeFormat> =
             listOf(
+                BarcodeFormat.AZTEC,
+                BarcodeFormat.DATA_MATRIX,
                 BarcodeFormat.UPC_A,
                 BarcodeFormat.UPC_E,
                 BarcodeFormat.EAN_8,
@@ -122,6 +174,7 @@ class AndroidScannerView(
                 BarcodeFormat.ITF,
                 BarcodeFormat.RSS_EXPANDED,
                 BarcodeFormat.QR_CODE,
+                BarcodeFormat.PDF_417,
                 BarcodeFormat.CODABAR,
             )
         mZXingBarcode.barcodeView.decoderFactory = DefaultDecoderFactory(formats)
